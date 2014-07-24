@@ -29,22 +29,6 @@ module.exports = function(grunt) {
     grunt.task.run('watch:live');
   });
 
-
-
-  // htmlバリデーション
-  grunt.registerTask('v', 'html validation', function() {
-    grunt.task.run('validation:validate');
-  });
-
-
-
-  // build/ directory preview
-  grunt.registerTask('d', 'Build directory demo.', function() {
-    grunt.task.run('connect:demo');
-  });
-
-
-
   // build
   grunt.registerTask('b', 'Build.', function() {
     
@@ -56,18 +40,4 @@ module.exports = function(grunt) {
     
   });
 
-
-
-  // Test up.
-  grunt.registerTask('testup', 'Test upload.', function() {
-    grunt.task.run('sftp-deploy:test');
-  });
-
-
-
-  // Publish
-  grunt.registerTask('publish', 'Publish.', function() {
-    grunt.task.run('sftp-deploy:publish');
-  });
-  
 };

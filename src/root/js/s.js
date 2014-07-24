@@ -1,18 +1,32 @@
 (function() {
 
-  var interval;
   var ballList = [];
 
-  var BALL_FRICTION = 0.12;// 摩擦係数
-  var BALL_SPRING = 0.005;// バネ係数
+  var CreateBall = function(elm, x, y) {
+    this.elm = elm;
 
-  var init = function() {
+    this.defaultX = x;
+    this.defaultY = y;
 
+    this.vx = 0;
+    this.vy = 0;
+
+    this.ax = 0;
+    this.ay = 0;
+
+    this.fx = 0;
+    this.fy = 0;
+
+    this.x = x;
+    this.y = y;
+
+  };
+
+  var ballRender = function() {
     var stage = document.getElementById('stage');
 
     var balls;
     var htmlStr = '';
-
 
     // ボール感覚
     var ballDist = 100;
@@ -20,13 +34,13 @@
     var stageW = stage.offsetWidth;
     var stageH = stage.offsetHeight;
 
+    var ballX;
+    var ballY;
+
     var ballXLen = Math.floor(stageW / ballDist);
     var ballYLen = Math.floor(stageH / ballDist);
 
     var x, y, i, l;
-
-    var ballX;
-    var ballY;
 
     for (x = 0; x < ballXLen; x++) {
       for (y = 0; y < ballYLen; y++) {
@@ -50,109 +64,106 @@
         ballY += ballDist;
       }
 
-      ballList[i] = createBall(balls[i], ballX, ballY, BALL_FRICTION, BALL_SPRING);
+      ballList[i] = new CreateBall(balls[i], ballX, ballY);
+
+      ballList[i].elm.style['-webkit-transform'] = ballList[i].transform(ballX, ballY);
+
     }
+  };
 
-    startAnime();
 
-    (function(){
-      //各ボールに力を加える    
-      var ball;
-      var ballLen = ballList.length;
-      while (ballLen > 0) {
-        ballLen -= 1;
-        ball = ballList[ballLen];
-        ball.forced((Math.random() - 0.5) * 20,
-                    (Math.random() - 0.5) * 20);
+  var animation = (function() {
+    var interval;
+
+    return {
+      startAnime: function() {
+        interval = setInterval(animation.onTimer ,15);
+      },
+
+      stopAnime: function() {
+        clearInterval(interval);
+      },
+
+      onTimer: function() {
+        var ball;
+        var ballLen = ballList.length;
+
+        while (ballLen > 0) {
+          ballLen -= 1;
+          ball = ballList[ballLen];
+          ball.update();
+        }
+
       }
-    })();
-  };
 
-
-  var startAnime = function() {
-    interval = setInterval(onTimer ,15);
-  };
-
-  var stopAnime = function() {
-    clearInterval(interval);
-  };
-
-  var onTimer = function() {
-    var ball;
-    var ballLen = ballList.length;
-
-    while (ballLen > 0) {
-      ballLen -= 1;
-      ball = ballList[ballLen];
-      ball.update();
-    }
-  };
-
-  var createBall = function(elm, x, y, friction, spring) {
-    var defaultX = x;
-    var defaultY = y;
-
-    var fx = 0;
-    var fy = 0;
-
-    var target = elm;
-
-    var transform = function(x, y) {
-      var value = 'translate3d(' +
-                  x +
-                  'px, ' +
-                  y +
-                  'px, 0)';
-      return value;
     };
 
-    var props = {
-      x: x,
-      y: y,
-      vx: 0,
-      vy: 0,
-      ax: 0,
-      ay: 0,
+  })();
+
+
+
+  CreateBall.prototype = (function() {
+
+    var BALL_FRICTION = 0.12;// 摩擦係数
+    var BALL_SPRING = 0.005;// バネ係数
+
+    return {
+      transform: function(x, y) {
+        var value = 'translate3d(' +
+                    x +
+                    'px, ' +
+                    y +
+                    'px, 0)';
+        return value;
+      },
+
       forced: function(_fx, _fy) {
-        fx = _fx;
-        fy = _fy;
+        this.fx = _fx;
+        this.fy = _fy;
       },
 
       update: function() {
-        // props.x += 1;
 
         // フックの法則（復元力は変化量に比例）
-        var springFx = - (props.x - defaultX) * spring;
-        var springFy = - (props.y - defaultY) * spring;
+        var springFx = - (this.x - this.defaultX) * BALL_SPRING;
+        var springFy = - (this.y - this.defaultY) * BALL_SPRING;
 
         // 力の合計（復元力 - 摩擦力）のぶんだけボールを加速
-        props.ax = springFx - props.vx * friction + fx;
-        props.ay = springFy - props.vy * friction + fy;
+        this.ax = springFx - this.vx * BALL_FRICTION + this.fx;
+        this.ay = springFy - this.vy * BALL_FRICTION + this.fy;
 
-        props.vx += props.ax;
-        props.vy += props.ay;
+        this.vx += this.ax;
+        this.vy += this.ay;
 
-        props.x += props.vx;
-        props.y += props.vy;
+        this.x += this.vx;
+        this.y += this.vy;
 
-        target.style['-webkit-transform'] = transform(props.x, props.y);
+        this.elm.style['-webkit-transform'] = this.transform(this.x, this.y);
 
-        fx = 0;
-        fy = 0;
+        this.fx = 0;
+        this.fy = 0;
       }
     };
 
+  })();
 
 
-    var init = function() {
-      target.style['-webkit-transform'] = transform(x, y);
-    };
- 
-    init();
 
-    return props;
-  };
+  ballRender();
 
-  init();
+  animation.startAnime();
+
+  (function(){
+    //各ボールに力を加える    
+    var ball;
+    var ballLen = ballList.length;
+    while (ballLen > 0) {
+      ballLen -= 1;
+      ball = ballList[ballLen];
+      ball.forced((Math.random() - 0.5) * 20,
+                  (Math.random() - 0.5) * 20);
+    }
+
+  })();
 
 })();

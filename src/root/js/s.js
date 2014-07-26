@@ -29,8 +29,8 @@
     // ボール感覚
     var ballDist = 100;
 
-    var stageW = stage.offsetWidth;
-    var stageH = stage.offsetHeight;
+    var stageW = window.innerWidth;
+    var stageH = window.innerHeight;
 
     var ballXLen = Math.floor(stageW / ballDist);
     var ballYLen = Math.floor(stageH / ballDist);
@@ -80,6 +80,10 @@
         clearTimeout(timer);
       }
       timer = setTimeout(function() {
+        var stage = document.getElementById('stage');
+        while (stage.firstChild) {
+          stage.removeChild(stage.firstChild);
+        }
         ballRender();
       }, 100);
     };

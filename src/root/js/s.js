@@ -16,11 +16,15 @@
     this.x = x; this.y = y;
   };
 
+
+
   var ballRender = function() {
     var stage = document.getElementById('stage');
 
+    var fragment = document.createDocumentFragment();
+    var div;
+
     var balls;
-    var htmlStr = '';
 
     // ボール感覚
     var ballDist = 100;
@@ -28,21 +32,22 @@
     var stageW = stage.offsetWidth;
     var stageH = stage.offsetHeight;
 
-    var ballX;
-    var ballY;
-
     var ballXLen = Math.floor(stageW / ballDist);
     var ballYLen = Math.floor(stageH / ballDist);
+
+    var ballX, ballY;
 
     var x, y, i, l;
 
     for (x = 0; x < ballXLen; x++) {
       for (y = 0; y < ballYLen; y++) {
-        htmlStr += '<div class="ball"></div>';
+        div = document.createElement('div');
+        div.className = 'ball';
+        fragment.appendChild(div);
       }
     }
 
-    stage.innerHTML = htmlStr;
+    stage.appendChild(fragment);
 
     balls = document.querySelectorAll('.ball');
 
@@ -64,6 +69,7 @@
 
     }
   };
+
 
 
   var animation = (function() {
@@ -145,19 +151,19 @@
 
   ballRender();
 
-  animation.startAnime();
+  // animation.startAnime();
 
-  (function(){
-    //各ボールに力を加える    
-    var ball;
-    var ballLen = ballList.length;
-    while (ballLen > 0) {
-      ballLen -= 1;
-      ball = ballList[ballLen];
-      ball.forced((Math.random() - 0.5) * 20,
-                  (Math.random() - 0.5) * 20);
-    }
+  // (function(){
+  //   //各ボールに力を加える    
+  //   var ball;
+  //   var ballLen = ballList.length;
+  //   while (ballLen > 0) {
+  //     ballLen -= 1;
+  //     ball = ballList[ballLen];
+  //     ball.forced((Math.random() - 0.5) * 20,
+  //                 (Math.random() - 0.5) * 20);
+  //   }
 
-  })();
+  // })();
 
 })();

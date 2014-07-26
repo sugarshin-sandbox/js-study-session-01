@@ -72,6 +72,22 @@
 
 
 
+  var reRender = (function() {
+    var timer = false;
+
+    return function() {
+      if (timer !== false) {
+        clearTimeout(timer);
+      }
+      timer = setTimeout(function() {
+        ballRender();
+      }, 100);
+    };
+
+  })();
+
+
+
   var animation = (function() {
     var interval;
 
@@ -150,6 +166,8 @@
 
 
   ballRender();
+
+  window.addEventListener('resize', reRender);
 
   // animation.startAnime();
 

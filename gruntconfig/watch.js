@@ -24,7 +24,7 @@ module.exports = {
 
       
 
-      'newer:jshint:lint'
+      'jshint:lint'
     ]
   }
   

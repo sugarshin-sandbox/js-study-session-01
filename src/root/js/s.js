@@ -5,21 +5,15 @@
   var CreateBall = function(elm, x, y) {
     this.elm = elm;
 
-    this.defaultX = x;
-    this.defaultY = y;
+    this.defaultX = x; this.defaultY = y;
 
-    this.vx = 0;
-    this.vy = 0;
+    this.vx = 0; this.vy = 0;
 
-    this.ax = 0;
-    this.ay = 0;
+    this.ax = 0; this.ay = 0;
 
-    this.fx = 0;
-    this.fy = 0;
+    this.fx = 0; this.fy = 0;
 
-    this.x = x;
-    this.y = y;
-
+    this.x = x; this.y = y;
   };
 
   var ballRender = function() {

@@ -97,11 +97,12 @@
 
     return {
       startAnime: function() {
-        interval = setInterval(animation.onTimer ,15);
+        animation.onTimer();
+        interval = setTimeout(animation.startAnime, 15);
       },
 
       stopAnime: function() {
-        clearInterval(interval);
+        clearTimeout(interval);
       },
 
       onTimer: function() {
@@ -173,9 +174,9 @@
 
   window.addEventListener('resize', reRender);
 
-  // animation.startAnime();
+  animation.startAnime();
 
-  // (function(){
+  // (function(callback){
   //   //各ボールに力を加える    
   //   var ball;
   //   var ballLen = ballList.length;
@@ -186,6 +187,9 @@
   //                 (Math.random() - 0.5) * 20);
   //   }
 
-  // })();
+  //   console.log(callback);
+  //   // callback();
+
+  // })(animation.stopAnime);
 
 })();

@@ -1,5 +1,7 @@
 (function() {
 
+  var stage = document.getElementById('stage');
+
   var ballList = [];
 
   var CreateBall = function(elm, x, y) {
@@ -19,7 +21,6 @@
 
 
   var ballRender = function() {
-    var stage = document.getElementById('stage');
 
     var fragment = document.createDocumentFragment();
     var div;
@@ -27,7 +28,7 @@
     var balls;
 
     // ボール感覚
-    var ballDist = 100;
+    var ballDist = 50;
 
     var stageW = window.innerWidth;
     var stageH = window.innerHeight;
@@ -95,6 +96,11 @@
   var animation = (function() {
     var interval;
 
+    var mouseX = 0,
+        mouseY = 0;
+
+    var isMouseOn = false;
+
     return {
       startAnime: function() {
         animation.onTimer();
@@ -109,12 +115,41 @@
         var ball;
         var ballLen = ballList.length;
 
+        var distX, distY, dist;
+        var rad;
+
         while (ballLen > 0) {
           ballLen -= 1;
           ball = ballList[ballLen];
+
+          if (isMouseOn) {
+            distX = ball.x - mouseX;
+            distY = ball.y - mouseY;
+
+            // ピタゴラスの定理
+            dist = Math.sqrt((distX * distX) + (distY * distY));
+
+            // マウス座標からボールへの角度
+            rad = Math.atan2(distY, distX);
+
+            ball.forced(
+              (100 / dist) * Math.cos(rad),
+              (100 / dist) * Math.sin(rad)
+            );
+          }
+
           ball.update();
         }
 
+      },
+
+      updateMousePosition: function(_this, e) {
+        mouseX = e.pageX;
+        mouseY = e.pageY;
+      },
+
+      mouseOnFlagToggle: function() {
+        isMouseOn = !isMouseOn;
       }
 
     };
@@ -176,20 +211,25 @@
 
   animation.startAnime();
 
-  // (function(callback){
-  //   //各ボールに力を加える    
-  //   var ball;
-  //   var ballLen = ballList.length;
-  //   while (ballLen > 0) {
-  //     ballLen -= 1;
-  //     ball = ballList[ballLen];
-  //     ball.forced((Math.random() - 0.5) * 20,
-  //                 (Math.random() - 0.5) * 20);
-  //   }
+  stage.addEventListener(
+    'mousemove',
+    function(event) {
+      animation.updateMousePosition(this, event);
+    }
+  );
 
-  //   console.log(callback);
-  //   // callback();
+  stage.addEventListener(
+    'mouseover',
+    function(event) {
+      animation.mouseOnFlagToggle(this, event);
+    }
+  );
 
-  // })(animation.stopAnime);
+  stage.addEventListener(
+    'mouseout',
+    function(event) {
+      animation.mouseOnFlagToggle(this, event);
+    }
+  );
 
 })();

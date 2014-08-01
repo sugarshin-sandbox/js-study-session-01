@@ -81,7 +81,7 @@
         clearTimeout(timer);
       }
       timer = setTimeout(function() {
-        var stage = document.getElementById('stage');
+
         while (stage.firstChild) {
           stage.removeChild(stage.firstChild);
         }

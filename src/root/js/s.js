@@ -66,7 +66,7 @@
 
       ballList[i] = new CreateBall(balls[i], ballX, ballY);
 
-      ballList[i].elm.style['-webkit-transform'] = ballList[i].transform(ballX, ballY);
+      ballList[i].elm.style['transform'] = ballList[i].transform(ballX, ballY);
 
     }
   };
@@ -194,7 +194,7 @@
         this.x += this.vx;
         this.y += this.vy;
 
-        this.elm.style['-webkit-transform'] = this.transform(this.x, this.y);
+        this.elm.style['transform'] = this.transform(this.x, this.y);
 
         this.fx = 0;
         this.fy = 0;

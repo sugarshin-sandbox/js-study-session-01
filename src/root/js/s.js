@@ -7,14 +7,19 @@
   var CreateBall = function(elm, x, y) {
     this.elm = elm;
 
+    // ボール座標の初期値
     this.defaultX = x; this.defaultY = y;
 
+    // 速さ（速度）
     this.vx = 0; this.vy = 0;
 
+    // 加速度
     this.ax = 0; this.ay = 0;
 
+    // ボールが外部から受けた力
     this.fx = 0; this.fy = 0;
 
+    // ボールの座標
     this.x = x; this.y = y;
   };
 
@@ -52,8 +57,8 @@
 
     balls = document.querySelectorAll('.ball');
 
-    ballX = -ballDist * 0.5;
-    ballY = -ballDist * 0.5;
+    ballX = -ballDist * 0;
+    // ballY = -ballDist * 0;
 
     for (i = 0, l = balls.length; i < l; i++) {
 
@@ -185,12 +190,14 @@
         var springFy = - (this.y - this.defaultY) * BALL_SPRING;
 
         // 力の合計（復元力 - 摩擦力）のぶんだけボールを加速
-        this.ax = springFx - this.vx * BALL_FRICTION + this.fx;
-        this.ay = springFy - this.vy * BALL_FRICTION + this.fy;
+        this.ax = springFx + (-this.vx * BALL_FRICTION) + this.fx;
+        this.ay = springFy + (-this.vy * BALL_FRICTION) + this.fy;
 
+        // 速さに加速度を足す
         this.vx += this.ax;
         this.vy += this.ay;
 
+        // 座標
         this.x += this.vx;
         this.y += this.vy;
 
